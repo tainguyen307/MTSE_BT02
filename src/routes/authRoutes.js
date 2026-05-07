@@ -1,9 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { loginController } = require('../controllers/authController');
-const { loginLimiter } = require('../middlewares/rateLimiter');
-const { validateLogin } = require('../middlewares/validate');
+const { loginController, registerController, verifyOTPController } = require('../controllers/authController');
+const { loginLimiter, registerLimiter } = require('../middlewares/rateLimiter');
+const { validateLogin, validateRegister } = require('../middlewares/validate');
 const { authorize } = require('../middlewares/authMiddleware');
+
+// Public route: Register
+router.post('/register', registerLimiter, validateRegister, registerController);
+
+
+// Public route: Verify OTP
+router.post('/verify-otp', verifyOTPController);
+
 // Public route: Login
 router.post('/login', loginLimiter, validateLogin, loginController);
 
