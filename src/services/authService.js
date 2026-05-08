@@ -37,6 +37,7 @@ const sendOTP = async (email, otp, subject, title) => {
 };
 
 const register = async ({
+    fullName,
     email,
     password
 }) => {
@@ -54,6 +55,7 @@ const register = async ({
         Date.now() + 5 * 60 * 1000;
 
     await userRepository.createUser({
+        fullName,
         email,
         password,
         otp,
@@ -172,4 +174,26 @@ const login = async (email, password) => {
     };
 };
 
-module.exports = { login, register, verifyOTP, forgotPassword, resetPassword };
+const editProfile = async (userId, data) => {
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw createError('User not found', 404);
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+            fullName: data.fullName
+        },
+        { new: true }
+    ).select('-password');
+
+    return {
+        message: 'Cập nhật profile thành công',
+        user: updatedUser
+    };
+};
+
+module.exports = { login, register, verifyOTP, forgotPassword, resetPassword, editProfile };

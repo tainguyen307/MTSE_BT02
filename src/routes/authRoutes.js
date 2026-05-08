@@ -5,19 +5,22 @@ const {
     registerController,
     verifyOTPController,
     forgotPasswordController,
-    resetPasswordController
+    resetPasswordController,
+    editProfileController
 } = require('../controllers/authController');
 const {
     loginLimiter,
     registerLimiter,
     forgotPasswordLimiter,
-    resetPasswordLimiter
+    resetPasswordLimiter,
+    editProfileLimiter
 } = require('../middlewares/rateLimiter');
 const {
     validateLogin,
     validateRegister,
     validateForgotPassword,
-    validateResetPassword
+    validateResetPassword,
+    validateEditProfile
 } = require('../middlewares/validate');
 const { authorize } = require('../middlewares/authMiddleware');
 
@@ -45,5 +48,7 @@ router.get('/user/profile', authorize('user'), (req, res) => {
 router.get('/admin/profile', authorize('admin'), (req, res) => {
     res.json({ message: "Welcome to Admin Dashboard", admin: req.user });
 });
+
+router.put('/user/profile', editProfileLimiter, authorize('user'), validateEditProfile, editProfileController);
 
 module.exports = router;

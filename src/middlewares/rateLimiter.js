@@ -24,9 +24,18 @@ const resetPasswordLimiter = rateLimit({
     message: "Bạn đã thử đặt lại mật khẩu quá nhiều lần, vui lòng đợi 15 phút"
 });
 
+const editProfileLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000,
+    max: 5,
+    message: {
+        message: "Bạn chỉnh profile quá nhiều lần, thử lại sau 5 phút"
+    }
+});
+
 module.exports = {
     loginLimiter,
     registerLimiter,
     forgotPasswordLimiter,
-    resetPasswordLimiter
+    resetPasswordLimiter,
+    editProfileLimiter
 };

@@ -95,10 +95,27 @@ const resetPasswordController = async (req, res) => {
     }
 };
 
+const editProfileController = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const result = await authService.editProfile(userId, req.body);
+
+        return res.status(200).json({
+            status: 'success',
+            data: result
+        });
+
+    } catch (error) {
+        return handleError(res, error, 400);
+    }
+};
+
 module.exports = {
     loginController,
     registerController,
     verifyOTPController,
     forgotPasswordController,
-    resetPasswordController
+    resetPasswordController,
+    editProfileController
 };
