@@ -12,4 +12,21 @@ const loginLimiter = rateLimit({
     message: "Thử quá nhiều lần, vui lòng đợi 15 phút"
 });
 
-module.exports = { loginLimiter, registerLimiter };
+const forgotPasswordLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 3,
+    message: "Bạn đã yêu cầu OTP quá nhiều lần, vui lòng đợi 15 phút"
+});
+
+const resetPasswordLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: "Bạn đã thử đặt lại mật khẩu quá nhiều lần, vui lòng đợi 15 phút"
+});
+
+module.exports = {
+    loginLimiter,
+    registerLimiter,
+    forgotPasswordLimiter,
+    resetPasswordLimiter
+};
