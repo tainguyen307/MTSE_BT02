@@ -13,6 +13,11 @@ const validate = (req, res, next) => {
 };
 
 const validateRegister = [
+    body('fullName')
+        .notEmpty()
+        .withMessage('Họ tên không được để trống')
+        .isLength({ min: 3 })
+        .withMessage('Họ tên tối thiểu 3 ký tự'),
     body('email')
         .isEmail()
         .withMessage('Email không hợp lệ'),
@@ -49,9 +54,19 @@ const validateResetPassword = [
     validate
 ];
 
+const validateEditProfile = [
+    body('fullName')
+        .notEmpty()
+        .withMessage('Họ tên không được để trống')
+        .isLength({ min: 3 })
+        .withMessage('Họ tên tối thiểu 3 ký tự'),
+    validate
+];
+
 module.exports = {
     validateLogin,
     validateRegister,
     validateForgotPassword,
-    validateResetPassword
+    validateResetPassword,
+    validateEditProfile
 };
