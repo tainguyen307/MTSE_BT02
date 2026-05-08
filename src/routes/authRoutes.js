@@ -1,8 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { loginController, registerController, verifyOTPController } = require('../controllers/authController');
-const { loginLimiter, registerLimiter } = require('../middlewares/rateLimiter');
-const { validateLogin, validateRegister } = require('../middlewares/validate');
+const {
+    loginController,
+    registerController,
+    verifyOTPController,
+    forgotPasswordController,
+    resetPasswordController
+} = require('../controllers/authController');
+const {
+    loginLimiter,
+    registerLimiter,
+    forgotPasswordLimiter,
+    resetPasswordLimiter
+} = require('../middlewares/rateLimiter');
+const {
+    validateLogin,
+    validateRegister,
+    validateForgotPassword,
+    validateResetPassword
+} = require('../middlewares/validate');
 const { authorize } = require('../middlewares/authMiddleware');
 
 // Public route: Register
@@ -14,6 +30,12 @@ router.post('/verify-otp', verifyOTPController);
 
 // Public route: Login
 router.post('/login', loginLimiter, validateLogin, loginController);
+
+// Public route: Forgot Password
+router.post('/forgot-password', forgotPasswordLimiter, validateForgotPassword, forgotPasswordController);
+
+// Public route: Reset Password
+router.post('/reset-password', resetPasswordLimiter, validateResetPassword, resetPasswordController);
 
 // Protected routes: Profile
 router.get('/user/profile', authorize('user'), (req, res) => {

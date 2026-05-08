@@ -1,5 +1,12 @@
 const authService = require('../services/authService');
 
+const handleError = (res, error, fallbackCode = 400) => {
+    return res.status(error.statusCode || fallbackCode).json({
+        status: 'error',
+        message: error.message
+    });
+};
+
 const registerController = async (req, res) => {
 
     try {
@@ -13,11 +20,7 @@ const registerController = async (req, res) => {
         });
 
     } catch (error) {
-
-        return res.status(400).json({
-            status: 'error',
-            message: error.message
-        });
+        return handleError(res, error, 400);
     }
 };
 
@@ -46,11 +49,7 @@ const verifyOTPController = async (
         });
 
     } catch (error) {
-
-        return res.status(400).json({
-            status: 'error',
-            message: error.message
-        });
+        return handleError(res, error, 400);
     }
 };
 
@@ -64,11 +63,42 @@ const loginController = async (req, res) => {
             data: result
         });
     } catch (error) {
-        return res.status(401).json({
-            status: 'error',
-            message: error.message
-        });
+        return handleError(res, error, 401);
     }
 };
 
-module.exports = { loginController, registerController, verifyOTPController};
+const forgotPasswordController = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const result = await authService.forgotPassword(email);
+
+        return res.status(200).json({
+            status: 'success',
+            data: result
+        });
+    } catch (error) {
+        return handleError(res, error, 400);
+    }
+};
+
+const resetPasswordController = async (req, res) => {
+    try {
+        const { email, otp, newPassword } = req.body;
+        const result = await authService.resetPassword(email, otp, newPassword);
+
+        return res.status(200).json({
+            status: 'success',
+            data: result
+        });
+    } catch (error) {
+        return handleError(res, error, 400);
+    }
+};
+
+module.exports = {
+    loginController,
+    registerController,
+    verifyOTPController,
+    forgotPasswordController,
+    resetPasswordController
+};
